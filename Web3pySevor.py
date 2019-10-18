@@ -21,15 +21,26 @@ p=GPIO.PWM(servo,50) #50hz frequency
 p.start(0) # starting duty cycle (it set the servo to 0 degree)
 
 contract = w3.eth.contract(address = address, abi=abi)
-
+temp = 5
 try:
-	while True:
-    time.sleep(1)
-    isclose = contract.functions.getA().call()
-    if isclose == 1:
-     	p.ChangeDutyCycle(12)
-    if isclose == 0:
-      p.ChangeDutyCycle(3)
+    while True:
+        time.sleep(1)
+        isclose = contract.functions.getA().call()
+#        print(isclose)
+#        temp = isclose
+#        if (temp != contract.functions.getA().call()):
+#            p.ChangeDutyCycle(12)
+#        else:
+#            p.ChangeDutyCycle(6.5)
+        if (temp != isclose):
+            if isclose == 1:
+                p.ChangeDutyCycle(12)
+                print ('trang thai:', isclose)
+            if isclose == 0:
+                p.ChangeDutyCycle(6.5)
+                print ('trang thai:', isclose)
+            temp = isclose
+            print ('temp:', temp)
 
 except KeyboardInterrupt:
-	GPIO.cleanup()
+    GPIO.cleanup()
