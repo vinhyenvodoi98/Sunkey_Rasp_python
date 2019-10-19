@@ -1,11 +1,14 @@
 
-from flask import Flask, request   # Importing the Flask modules required for this project
+from flask import Flask, request, jsonify   # Importing the Flask modules required for this project
 import RPi.GPIO as GPIO     # Importing the GPIO library to control GPIO pins of Raspberry Pi
 from time import sleep      # Import sleep module from time library to add delays
 import json
 from web3 import Web3
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app,support_credentials=True)
+app.config['CORS_HEADERS']='Content-Type'
 
 def runSevor(duty):
     # Pins where we have connected servos
@@ -38,6 +41,7 @@ def connectWeb3(address):
     return isOpen 
 
 @app.route("/door/<door_address>",methods=['GET'])
+@cross_origin(supports_credentials=True)
 def door(door_address):
     print (door_address)
     isOpen = connectWeb3(door_address)
@@ -46,8 +50,8 @@ def door(door_address):
         runSevor(12)
     if isOpen == False:
         runSevor(6.5)
-    return "OK"
+    return jsonify({'success':isOpen})
 
 # Run the app on the local development server
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port = 3000, debug=True)
+    app.run(host='0.0.0.0',port = 3000, debug=False)
