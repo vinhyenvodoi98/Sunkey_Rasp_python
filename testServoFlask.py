@@ -37,21 +37,21 @@ TPL = '''
 # which URL should call the associated function.
 @app.route("/")
 def home():
-	return render_template_string(TPL)
+    return render_template_string(TPL)
 
 @app.route("/test", methods=["POST"])
 def test():
-	# Get slider Values
-	slider1 = request.form["slider1"]
-	# Change duty cycle
-	p.ChangeDutyCycle(float(slider1))
-	print float(slider1)
-	# Give servo some time to move
-	sleep(1)
-	# Pause the servo
-	p.ChangeDutyCycle(0)
-	return render_template_string(TPL)
+    # Get slider Values
+    slider1 = request.form["slider1"]
+    # Change duty cycle
+    p.ChangeDutyCycle(float(slider1))
+    print (float(slider1))
+    # Give servo some time to move
+    sleep(1)
+    # Pause the servo
+    p.ChangeDutyCycle(0)
+    return render_template_string(TPL)
 
 # Run the app on the local development server
 if __name__ == "__main__":
-	app.run()
+    app.run(host='0.0.0.0', debug=True)
